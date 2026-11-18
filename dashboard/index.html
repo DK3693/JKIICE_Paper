@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="Interactive portfolio companion for a single-person smartwatch activity analysis case study." />
+<title>Personal Baseline | Activity Research Dashboard</title>
+<style>
+:root {--bg:#f2f6fb;--nav:#11243e;--nav2:#1c3959;--ink:#14233a;--muted:#62758c;--line:#dce6f0;--panel:#fff;--teal:#20ae99;--blue:#3d6bb4;--gold:#eeae69}
+* {box-sizing:border-box} body{margin:0;background:var(--bg);font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.side{background:linear-gradient(165deg,var(--nav),#183955);color:white;padding:30px 18px;display:flex;flex-direction:column;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;padding:0 12px;font-weight:750;font-size:18px;line-height:1.2}
+.logo{width:36px;height:36px;background:linear-gradient(145deg,#31d1b8,#4a89d8);border-radius:10px;display:grid;place-items:center;color:#0c2941;font-size:21px;font-weight:900}
+.side small{color:#a9c1d9}.side .eyebrow{color:#7e9ebd;font-size:11px;letter-spacing:1.3px;text-transform:uppercase;padding:0 14px}
+.nav{display:flex;flex-direction:column;gap:5px}.nav button{background:transparent;border:0;color:#b9cada;font:inherit;cursor:pointer;text-align:left;padding:12px 14px;border-radius:9px;font-weight:600;display:flex;gap:12px;align-items:center}
+.nav button:hover,.nav button[aria-selected=true]{background:#294967;color:white}.nav button[aria-selected=true]:before{content:"";display:block;width:3px;height:16px;background:#47d2bc;border-radius:5px}.nav button:not([aria-selected=true]):before{content:"";display:block;width:3px;height:16px}
+.sidefoot{margin-top:auto;padding:14px;color:#bdcbdd;font-size:12px;border-top:1px solid #36516d}
+.main{padding:36px 46px 48px;max-width:1570px;width:100%;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:27px}
+.kicker{font-size:12px;font-weight:800;letter-spacing:2.1px;color:#267f91;text-transform:uppercase}
+h1{font-size:30px;line-height:1.14;margin:9px 0 7px;letter-spacing:-.8px}p{margin:0;color:var(--muted)}
+.tag{display:inline-block;background:#e8f5f0;color:#177761;border-radius:99px;padding:9px 13px;font-size:12px;font-weight:750;white-space:nowrap}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:19px}
+.card{border-radius:14px;background:var(--panel);border:1px solid var(--line);box-shadow:0 3px 14px #162c4510;padding:22px 23px}
+.statname{color:#637892;font-size:13px;font-weight:650}.statval{font-size:30px;letter-spacing:-.6px;font-weight:780;margin-top:10px}.statnote{font-size:12px;color:#90a0b2;margin-top:7px}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}.section-head{font-size:16px;font-weight:770;margin:0 0 21px}.mini{font-size:11px;color:#8493a3;letter-spacing:.7px;margin-top:-15px;margin-bottom:23px}
+.barline{display:grid;grid-template-columns:90px 1fr 64px;align-items:center;gap:14px;margin:21px 0;font-size:14px;font-weight:700}
+.track{height:18px;border-radius:5px;background:#edf2f7;overflow:hidden}.fill{height:100%;border-radius:5px}.baseline{background:#426fb8}.elevated{background:#28ad9b}.high{background:#eda85d}
+.heat{border-collapse:separate;border-spacing:5px;width:100%;text-align:center;font-weight:800}.heat th{font-size:12px;color:#789;letter-spacing:0;padding:8px 5px}.heat td{border-radius:7px;height:56px;font-size:16px}.heat .rowhead{font-size:13px;color:#456;text-align:left;padding-right:12px}.v78{background:#315b96;color:white}.v51{background:#6b9fce;color:white}.v40{background:#9fbddf}.v35{background:#afcce6}.v29{background:#bdd5eb}.v25{background:#c9dcf0}.v20{background:#d8e5f3}.v15{background:#e2ebf6}.v07{background:#f0f5fa}
+.note{margin-top:17px;border-top:1px solid #eef2f6;padding-top:13px;font-size:12px;color:#73879c}
+.summaries{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:18px}.highlight{font-size:24px;font-weight:800;color:#264e7a;padding-bottom:5px}
+.method-image{width:100%;max-width:1200px;display:block;margin:10px auto 0}
+.method-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:20px}.method-list strong{display:block;font-size:14px;margin-bottom:7px}.method-list p{font-size:13px}
+.formula{font-size:23px;font-weight:680;background:#f0f8fb;color:#234f63;border-radius:12px;padding:18px 22px;margin:20px 0}
+.table{width:100%;border-collapse:collapse;margin-top:15px}.table th,.table td{text-align:left;border-bottom:1px solid #e4edf4;padding:12px;font-size:14px}.table th{color:#667d93;font-size:12px;text-transform:uppercase;letter-spacing:.7px}
+.view{display:none}.view.active{display:block}
+.footer{margin-top:27px;font-size:12px;color:#91a0b2}
+@media(max-width:1100px){.grid4{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.method-list{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.shell{grid-template-columns:1fr}.side{padding:14px;gap:12px}.brand{padding:0 6px}.nav{flex-direction:row;overflow:auto}.nav button{min-width:max-content;padding:8px 10px}.side .eyebrow,.sidefoot{display:none}.main{padding:24px 18px}.grid4,.summaries,.method-list{grid-template-columns:1fr}.top{display:block}.tag{margin-top:14px}h1{font-size:26px}.barline{grid-template-columns:70px 1fr 56px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side">
+<div class="brand"><div class="logo" aria-hidden="true">P</div><div>Personal<br>Baseline <small>Research</small></div></div>
+<div><div class="eyebrow">Visual analytics</div><nav class="nav" aria-label="Dashboard sections">
+<button type="button" aria-selected="true" data-view="overview">Overview</button>
+<button type="button" aria-selected="false" data-view="method">Architecture</button>
+<button type="button" aria-selected="false" data-view="validation">Physiology</button>
+</nav></div>
+<div class="sidefoot">SMARTWATCH · 28-DAY CASE STUDY<br>Portfolio results companion</div>
+</aside>
+<main class="main">
+<header class="top"><div><div class="kicker">Wearable Intelligence / Research showcase</div><h1>Personal Baseline Activity Analysis</h1><p>Individualized activity states and physiological response insights</p></div><span class="tag">Single-participant case study</span></header>
+<section class="view active" id="overview">
+<div class="grid4">
+<div class="card"><div class="statname">Collection period</div><div class="statval">28 <span style="font-size:17px">days</span></div><div class="statnote">Continuous wearable observation</div></div>
+<div class="card"><div class="statname">Personal baseline</div><div class="statval">14 <span style="font-size:17px">days</span></div><div class="statnote">Median + IQR normalization</div></div>
+<div class="card"><div class="statname">Valid 5-min samples</div><div class="statval">3,685</div><div class="statnote">Of 4,032 evaluation bins</div></div>
+<div class="card"><div class="statname">Data retention</div><div class="statval">91.39%</div><div class="statnote">After data quality filtering</div></div>
+</div>
+<div class="cols">
+<div class="card"><div class="section-head">Activity State Distribution</div><div class="mini">SHARE OF VALID 5-MIN SAMPLES</div>
+<div class="barline"><span>Baseline</span><div class="track"><div class="fill baseline" style="width:58.43%"></div></div><span>58.43%</span></div>
+<div class="barline"><span>Elevated</span><div class="track"><div class="fill elevated" style="width:22.23%"></div></div><span>22.23%</span></div>
+<div class="barline"><span>High</span><div class="track"><div class="fill high" style="width:19.35%"></div></div><span>19.35%</span></div>
+<div class="note">State thresholds on normalized activity proxy: Baseline &lt; 0.5, Elevated 0.5–3, High ≥ 3.</div></div>
+<div class="card"><div class="section-head">State Transition Matrix</div><div class="mini">P(NEXT STATE | CURRENT STATE)</div>
+<table class="heat"><thead><tr><th></th><th>Baseline</th><th>Elevated</th><th>High</th></tr></thead>
+<tbody><tr><th class="rowhead">Baseline</th><td class="v78">0.78</td><td class="v15">0.15</td><td class="v07">0.07</td></tr>
+<tr><th class="rowhead">Elevated</th><td class="v40">0.40</td><td class="v35">0.35</td><td class="v25">0.25</td></tr>
+<tr><th class="rowhead">High</th><td class="v20">0.20</td><td class="v29">0.29</td><td class="v51">0.51</td></tr></tbody></table>
+<div class="note">Rows are normalized transition probabilities reported in the manuscript.</div></div>
+</div>
+<div class="summaries"><div class="card"><div class="highlight">≈ 0.285</div><div class="statname">Proxy–HR correlation</div></div><div class="card"><div class="highlight">13.27 min</div><div class="statname">Mean observed HR recovery</div></div><div class="card"><div class="highlight">124</div><div class="statname">Recovery events</div></div></div>
+</section>
+<section class="view" id="method"><div class="card"><div class="section-head">End-to-End Research Architecture</div><p>Activity labeling is derived from movement-related signals. Heart rate is reserved for a separate physiological cross-check.</p><img class="method-image" src="../assets/architecture.svg" alt="Smartwatch sensing, preprocessing, baseline normalization, activity proxy, state analysis and heart rate physiological check"/></div>
+<div class="method-list"><div class="card"><strong>01 · Synchronize</strong><p>Clean sensor readings, align step/sport value streams with 5-minute averaged heart-rate data.</p></div><div class="card"><strong>02 · Normalize</strong><p>Use each individual's 14-day median and interquartile range as a relative reference.</p></div><div class="card"><strong>03 · Interpret</strong><p>Generate an activity proxy, classify three states, then examine transitions and HR responses.</p></div></div>
+<div class="formula">ActivityProxy = max(Z_step, Z_sport)</div>
+</section>
+<section class="view" id="validation">
+<div class="grid4" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div class="card"><div class="statname">Association with HR</div><div class="statval">≈0.285</div><div class="statnote">Positive, modest correlation</div></div><div class="card"><div class="statname">Mean recovery</div><div class="statval">13.27 <span style="font-size:15px">min</span></div><div class="statnote">Median: 5 minutes</div></div><div class="card"><div class="statname">Recovery events</div><div class="statval">124</div><div class="statnote">Identified in the case study</div></div></div>
+<div class="card"><div class="section-head">Physiological Evaluation Approach</div><p>Heart rate did not contribute to activity state classification. Its relationship with state changes was analyzed afterward, helping assess physiological consistency without using HR to define the states being examined.</p>
+<table class="table"><thead><tr><th>Analysis</th><th>Manuscript-reported observation</th></tr></thead><tbody>
+<tr><td>State-specific heart rate</td><td>Central HR distribution increased from Baseline to Elevated to High</td></tr>
+<tr><td>Proxy–heart rate association</td><td>Approximate correlation coefficient of 0.285</td></tr>
+<tr><td>Temporal relationship</td><td>Highest cross-correlation at lag 0 with 5-minute aggregation</td></tr>
+<tr><td>Recovery pattern</td><td>124 events, mean 13.27 minutes, median 5 minutes</td></tr>
+</tbody></table><div class="note">These observations indicate within-participant physiological consistency; they are not activity-recognition accuracy or clinical diagnostic performance.</div></div>
+</section>
+<footer class="footer">Research-results dashboard generated from manuscript aggregate values. No underlying personal sensor records are embedded in this page.</footer>
+</main></div>
+<script>
+(() => {
+  const buttons = [...document.querySelectorAll('[data-view]')];
+  const views = [...document.querySelectorAll('.view')];
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const selected = button.dataset.view;
+      for (const b of buttons) b.setAttribute('aria-selected', String(b === button));
+      for (const view of views) view.classList.toggle('active', view.id === selected);
+    });
+  }
+})();
+</script>
+</body></html>

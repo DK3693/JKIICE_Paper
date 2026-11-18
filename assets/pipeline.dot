@@ -1,0 +1,15 @@
+digraph G {
+  graph [rankdir=LR, bgcolor="#FFFFFF", pad="0.32", nodesep="0.45", ranksep="0.65", splines=ortho, fontname="DejaVu Sans"];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=11, margin="0.18,0.12", color="#c6d7e8", fontcolor="#17304e", fillcolor="#f2f7fc"];
+  edge [color="#718dab", penwidth=1.7, arrowsize=.7];
+  raw [label="Smartwatch signals\nSteps · Sport value · HR",fillcolor="#e8f3ff"];
+  preprocess [label="Preprocessing\nCleaning · 5-min alignment"];
+  personal [label="Personal baseline\n14-day median / IQR"];
+  proxy [label="Activity proxy\nmax(Z_step, Z_sport)",fillcolor="#e7faf4"];
+  states [label="Activity states\nBaseline · Elevated · High",fillcolor="#e7faf4"];
+  behavior [label="Behavioral analysis\nDistribution · Transitions"];
+  physiology [label="Physiological check\nHR response · Recovery",fillcolor="#fff3e8"];
+  raw -> preprocess -> personal -> proxy -> states -> behavior;
+  preprocess -> physiology [constraint=false, color="#e09a64"];
+  states -> physiology [color="#e09a64"];
+}
